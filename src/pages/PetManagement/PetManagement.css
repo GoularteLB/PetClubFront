@@ -7,7 +7,7 @@
 
 
 .pet-header {
-  background-color: #facc15;
+  background: linear-gradient(135deg, #F48E2B 0%, #F5BE3A 100%);
   color: #FFFF;
   padding: 1.5rem 2rem;
   border-radius: 10px;
@@ -26,7 +26,7 @@
 
 .add-pet-btn {
   background-color: #FFFF;
-  color: #facc15;
+  color: #F5BE3A;
   border: none;
   border-radius: 50%;
   width: 40px;

@@ -43,7 +43,7 @@
 }
 
 .login-form h2 {
-  color: #eab308	;
+  color: #F5BE3A;
   margin-bottom: 0.5rem;
 }
 
@@ -95,20 +95,20 @@
 }
 
 .forgot-password {
-  color: #eab308	;
+  color: #F5BE3A;
   text-decoration: none;
   transition: color 0.2s;
 }
 
 .forgot-password:hover {
   text-decoration: underline;
-  color: #facc15;
+  color: #F5BE3A;
 }
 
 .login-button {
   width: 100%;
   padding: 0.9rem;
-  background-color: #eab308;
+  background: linear-gradient(135deg, #F48E2B 0%, #F5BE3A 100%);
   color: white;
   border: none;
   border-radius: 6px;
@@ -119,7 +119,7 @@
 }
 
 .login-button:hover {
-  background-color: #facc15;
+  background: linear-gradient(135deg, #F48E2B 0%, #F5BE3A 100%);
 }
 
 .signup-link {
@@ -129,7 +129,7 @@
 }
 
 .signup-link a {
-  color: #facc15;
+  color: #F5BE3A;
   text-decoration: none;
   font-weight: 500;
 }
