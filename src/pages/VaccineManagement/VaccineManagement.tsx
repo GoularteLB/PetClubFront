@@ -4,6 +4,7 @@ import { FaSyringe, FaPlus, FaEdit, FaTrash, FaCalendarAlt, FaTimes, FaPaw, FaUs
 import { toast } from 'react-toastify';
 import { Vacina } from '../../types';
 import { vacinaService } from '../../services/vacinaService';
+import { petService } from '../../services/petService';
 import { authService } from '../../services/authService';
 import ConfirmationModal from '../../components/modals/ConfirmationModal';
 import './VaccineManagement.css';
@@ -16,6 +17,7 @@ interface VaccineFormData {
 
 interface VaccineManagementState {
   vacinas: Vacina[];
+  pets: Array<{ id: number; name: string }>; // Adicionando lista de pets
   isLoading: boolean;
   isDeleting: number | null;
   isModalOpen: boolean;
@@ -25,6 +27,7 @@ interface VaccineManagementState {
   deleteDialogOpen: number | null;
   deletingVaccine: Vacina | null;
   currentVaccineId: number | null;
+  isLoadingPets: boolean; // Adicionando estado de carregamento para os pets
 }
 
 const VaccineManagement = () => {
@@ -32,6 +35,7 @@ const VaccineManagement = () => {
   
   const [state, setState] = useState<VaccineManagementState>({
     vacinas: [],
+    pets: [], // Inicializando a lista de pets vazia
     isLoading: true,
     isDeleting: null,
     isModalOpen: false,
@@ -44,12 +48,15 @@ const VaccineManagement = () => {
     errors: {},
     deleteDialogOpen: null,
     deletingVaccine: null,
-    currentVaccineId: null
+    currentVaccineId: null,
+    isLoadingPets: true // Inicializando o estado de carregamento dos pets
   });
 
   const {
     vacinas,
+    pets,
     isLoading,
+    isLoadingPets,
     isDeleting,
     isModalOpen,
     isEditing,
@@ -79,6 +86,25 @@ const VaccineManagement = () => {
     }
   };
 
+  // Função para carregar a lista de pets
+  const fetchPets = async () => {
+    try {
+      updateState({ isLoadingPets: true });
+      const pets = await petService.getPets();
+      updateState({ 
+        pets: pets.map((pet: { id?: number; name: string }) => ({ 
+          id: pet.id || 0, 
+          name: pet.name 
+        })),
+        isLoadingPets: false 
+      });
+    } catch (error) {
+      console.error('Erro ao carregar a lista de pets:', error);
+      toast.error('Erro ao carregar a lista de pets');
+      updateState({ isLoadingPets: false });
+    }
+  };
+
   useEffect(() => {
     const user = authService.getCurrentUser();
     if (!user) {
@@ -86,6 +112,7 @@ const VaccineManagement = () => {
       return;
     }
     fetchVacinas();
+    fetchPets(); // Carrega a lista de pets ao montar o componente
   }, [navigate]);
 
   const validateForm = (): boolean => {
@@ -405,21 +432,33 @@ const VaccineManagement = () => {
               
               <div className="form-group">
                 <label htmlFor="petId">Pet *</label>
-                <select
-                  id="petId"
-                  name="petId"
-                  value={formData.petId}
-                  onChange={handleChange}
-                  className={errors.petId ? 'input-error' : ''}
-                >
-                  <option value="">Selecione um pet</option>
-                  {vacinas.map(vacina => (
-                    <option key={vacina.id} value={vacina.id}>
-                      {vacina.type}
-                    </option>
-                  ))}
-                </select>
-                {errors.petId && <span className="error-message">{errors.petId}</span>}
+                {isLoadingPets ? (
+                  <div className="loading-message">Carregando lista de pets...</div>
+                ) : (
+                  <>
+                    <select
+                      id="petId"
+                      name="petId"
+                      value={formData.petId}
+                      onChange={handleChange}
+                      className={errors.petId ? 'input-error' : ''}
+                      disabled={isLoadingPets}
+                    >
+                      <option value="">Selecione um pet</option>
+                      {pets.map((pet: { id: number; name: string }) => (
+                        <option key={pet.id} value={pet.id}>
+                          {pet.name}
+                        </option>
+                      ))}
+                    </select>
+                    {errors.petId && <span className="error-message">{errors.petId}</span>}
+                  </>
+                )}
+                {pets.length === 0 && !isLoadingPets && (
+                  <div className="no-pets-message">
+                    Nenhum pet cadastrado. Por favor, cadastre um pet primeiro.
+                  </div>
+                )}
               </div>
               
               <div className="form-actions">
