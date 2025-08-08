@@ -260,7 +260,6 @@
   font-size: 1.1rem;
 }
 
-/* Estilos para o diálogo de confirmação */
 .confirmation-dialog {
   text-align: center;
   padding: 0 1rem;
@@ -352,7 +351,6 @@
   vertical-align: middle;
 }
 
-/* Ajustes para telas menores */
 @media (max-width: 480px) {
   .confirmation-dialog .form-actions {
     flex-direction: column;

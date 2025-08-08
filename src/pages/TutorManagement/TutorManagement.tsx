@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FaUser, FaUserPlus, FaPaw, FaEdit, FaTrash, FaBirthdayCake, FaTimes } from 'react-icons/fa';
+import { FaUser, FaUserPlus, FaPaw, FaEdit, FaTrash, FaTimes, FaBirthdayCake, FaSyringe } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 import { Tutor } from '../../types';
 import { tutorService } from '../../services/tutorService';
@@ -289,6 +289,12 @@ const TutorManagement = () => {
             <FaPaw /> Gerenciar Pets
           </button>
           <button 
+            className="primary-btn"
+            onClick={() => navigate('/vaccines')}
+          >
+            <FaSyringe /> Gerenciar Vacinas
+          </button>
+          <button 
             className="add-tutor-btn" 
             onClick={openNewTutorModal}
             title="Adicionar Tutor"
@@ -304,9 +310,9 @@ const TutorManagement = () => {
             <FaUser className="empty-icon" />
             <h3>Nenhum tutor cadastrado</h3>
             <p>Comece adicionando seu primeiro tutor para gerenciar os pets.</p>
-            <button 
+            <button
               className="primary-btn"
-              onClick={() => navigate('/tutors/new')}
+              onClick={openNewTutorModal}
             >
               <FaUserPlus /> Adicionar Primeiro Tutor
             </button>
@@ -348,14 +354,14 @@ const TutorManagement = () => {
                 </div>
               </div>
               <div className="tutor-actions">
-                <button 
+                <button
                   className="edit-btn"
                   onClick={() => tutor.id && openEditTutorModal(tutor)}
                   title="Editar tutor"
                 >
                   <FaEdit />
                 </button>
-                <button 
+                <button
                   className={`delete-btn ${isDeleting === tutor.id ? 'deleting' : ''}`}
                   onClick={() => handleDeleteClick(tutor)}
                   disabled={isDeleting === tutor.id}
@@ -379,7 +385,7 @@ const TutorManagement = () => {
           resetForm();
         }}>
           <div className="modal" onClick={e => e.stopPropagation()}>
-            <button 
+            <button
               className="close-modal-btn"
               onClick={() => {
                 updateState({ isModalOpen: false });

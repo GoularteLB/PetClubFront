@@ -3,6 +3,7 @@ import Login from './pages/Login/Login';
 import PetManagement from './pages/PetManagement/PetManagement';
 import TutorRegistration from './pages/TutorRegistration/TutorRegistration';
 import TutorManagement from './pages/TutorManagement/TutorManagement';
+import VaccineManagement from './pages/VaccineManagement/VaccineManagement';
 import { authService } from './services/authService';
 
 const ProtectedRoute = () => {
@@ -23,6 +24,7 @@ function App() {
           <Route path="/tutors" element={<TutorManagement />} />
           <Route path="/tutors/new" element={<TutorRegistration />} />
           <Route path="/tutors/edit/:id" element={<TutorRegistration />} />
+          <Route path="/vaccines" element={<VaccineManagement />} />
         </Route>
         
         <Route path="*" element={<Navigate to="/login" replace />} />

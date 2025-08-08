@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { petService, Pet } from '../../services/petService';
 import { authService } from '../../services/authService';
-import { FaPlus, FaEdit, FaTrash, FaDog, FaCat, FaDove, FaMouse } from 'react-icons/fa';
+import { FaPaw, FaPlus, FaEdit, FaTrash, FaUser, FaPhone, FaEnvelope, FaBirthdayCake, FaWeight, FaCat, FaDog, FaUserFriends, FaSyringe, FaDove, FaMouse } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import './PetManagement.css';
@@ -184,12 +184,22 @@ const PetManagement = () => {
         <h1>Meus Pets</h1>
         <div className="header-actions">
           <button 
-            className="primary-btn" 
+            className="primary-btn"
             onClick={() => navigate('/tutors')}
           >
-            Gerenciar Tutores
+            <FaUserFriends /> Gerenciar Tutores
           </button>
-          <button className="add-pet-btn" onClick={openNewPetModal} title="Adicionar Pet">
+          <button 
+            className="primary-btn"
+            onClick={() => navigate('/vaccines')}
+          >
+            <FaSyringe /> Gerenciar Vacinas
+          </button>
+          <button 
+            className="add-pet-btn" 
+            onClick={openNewPetModal} 
+            title="Adicionar Pet"
+          >
             <FaPlus />
           </button>
         </div>
