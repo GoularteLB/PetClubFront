@@ -1,4 +1,3 @@
-// Tipos comuns para a aplicação
 
 export interface Tutor {
   id?: number;

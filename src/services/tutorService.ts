@@ -1,7 +1,6 @@
 import axios, { AxiosError } from 'axios';
 import type { Tutor } from '../types';
 
-// Re-exportar o tipo Tutor para compatibilidade com importações existentes
 export type { Tutor };
 
 const api = axios.create({

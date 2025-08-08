@@ -41,7 +41,7 @@ api.interceptors.response.use(
 export interface Vacina {
   id?: number;
   type: string;
-  date: string; // Formato: YYYY-MM-DD
+  date: string;
   petId: number;
   createdAt?: string;
   updatedAt?: string;

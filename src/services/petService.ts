@@ -1,7 +1,7 @@
 import axios, { AxiosError } from 'axios';
 import type { Pet, ApiResponse } from '../types';
 
-// Re-exportar o tipo Pet para compatibilidade com importações existentes
+
 export type { Pet };
 
 const api = axios.create({
