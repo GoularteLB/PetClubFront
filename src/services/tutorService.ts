@@ -1,4 +1,8 @@
 import axios, { AxiosError } from 'axios';
+import type { Tutor } from '../types';
+
+// Re-exportar o tipo Tutor para compatibilidade com importações existentes
+export type { Tutor };
 
 const api = axios.create({
   baseURL: 'http://localhost:8080/tutores',
@@ -38,24 +42,17 @@ api.interceptors.response.use(
   }
 );
 
-export interface Tutor {
-  id?: number;
-  name: string;
-  nickname?: string;
-  birthDate: string;
-}
-
 export const tutorService = {
   async listTutors(): Promise<Tutor[]> {
     console.log('Buscando lista de tutores...');
-    const response = await api.get<Tutor[]>('/tutores');
+    const response = await api.get<Tutor[]>('');
     console.log('Tutores recebidos:', response.data);
     return response.data;
   },
 
   async getTutor(id: number): Promise<Tutor> {
     console.log(`Buscando tutor com ID ${id}...`);
-    const response = await api.get<Tutor>(`/tutores/${id}`);
+    const response = await api.get<Tutor>(`/${id}`);
     console.log('Tutor recebido:', response.data);
     return response.data;
   },
@@ -81,7 +78,6 @@ export const tutorService = {
         }
       } else if (error instanceof Error) {
         console.error('[tutorService] Erro inesperado:', error.message);
-        console.error('[tutorService] Erro inesperado:', error.message);
       }
       
       throw error;
@@ -90,23 +86,23 @@ export const tutorService = {
 
   async updateTutor(id: number, tutor: Partial<Tutor>): Promise<Tutor> {
     console.log(`Atualizando tutor ID ${id}:`, tutor);
-    const response = await api.put<Tutor>(`/tutores/${id}`, tutor);
+    const response = await api.put<Tutor>(`/${id}`, tutor);
     console.log('Tutor atualizado com sucesso:', response.data);
     return response.data;
   },
 
   async deleteTutor(id: number): Promise<void> {
     console.log(`Excluindo tutor ID ${id}...`);
-    await api.delete(`/tutores/${id}`);
-    console.log('Tutor excluído com sucesso');
+    await api.delete(`/${id}`);
+    console.log(`Tutor ID ${id} excluído com sucesso`);
   },
 
   async searchTutors(name: string): Promise<Tutor[]> {
     console.log(`Buscando tutores com nome: ${name}`);
-    const response = await api.get<Tutor[]>('/tutores/search', {
+    const response = await api.get<Tutor[]>('/search', {
       params: { nome: name }
     });
-    console.log('Tutores encontrados:', response.data);
+    console.log('Resultados da busca:', response.data);
     return response.data;
   }
 };

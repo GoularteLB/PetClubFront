@@ -17,7 +17,6 @@ const TutorRegistration = () => {
   const validateForm = (): boolean => {
     const newErrors: Record<string, string> = {};
     
-    // Validação do nome
     if (!formData.name.trim()) {
       newErrors.name = 'Nome é obrigatório';
     } else if (formData.name.trim().length < 3) {
@@ -26,25 +25,25 @@ const TutorRegistration = () => {
       newErrors.name = 'O nome não pode ter mais de 100 caracteres';
     }
     
-    // Validação da data de nascimento
     if (!formData.birthDate) {
       newErrors.birthDate = 'Data de nascimento é obrigatória';
     } else {
       const birthDate = new Date(formData.birthDate);
       const today = new Date();
       
-      // Define a data mínima para 120 anos atrás
       const minDate = new Date();
       minDate.setFullYear(today.getFullYear() - 120);
       
-      if (birthDate > today) {
+      if (isNaN(birthDate.getTime())) {
+        newErrors.birthDate = 'Data de nascimento inválida';
+      } else if (birthDate > today) {
         newErrors.birthDate = 'A data de nascimento não pode ser no futuro';
       } else if (birthDate < minDate) {
         newErrors.birthDate = 'Por favor, insira uma data de nascimento válida';
       }
     }
     
-    // Validação opcional do apelido
+  
     if (formData.nickname && formData.nickname.length > 50) {
       newErrors.nickname = 'O apelido não pode ter mais de 50 caracteres';
     }
@@ -83,16 +82,13 @@ const TutorRegistration = () => {
     } catch (error: any) {
       console.error('Erro ao cadastrar tutor:', error);
       
-      // Verifica se o erro é de duplicação de nome
       if (error.response?.status === 400 && error.response?.data?.includes('Já existe um tutor com esse nome')) {
         toast.error('Já existe um tutor cadastrado com este nome. Por favor, use um nome diferente.');
-        // Define o erro no campo de nome para destacá-lo no formulário
         setErrors(prev => ({
           ...prev,
           name: 'Este nome já está em uso. Por favor, escolha outro.'
         }));
       } else {
-        // Outros tipos de erro
         const errorMessage = error.response?.data?.message || 'Erro ao realizar cadastro. Tente novamente.';
         toast.error(errorMessage);
       }
@@ -104,7 +100,6 @@ const TutorRegistration = () => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     
-    // Limita o comprimento máximo dos campos
     let processedValue = value;
     if (name === 'name' && value.length > 100) {
       processedValue = value.slice(0, 100);
@@ -117,7 +112,6 @@ const TutorRegistration = () => {
       [name]: processedValue
     }));
     
-    // Limpa o erro do campo quando o usuário começa a digitar
     if (errors[name]) {
       setErrors(prev => ({
         ...prev,

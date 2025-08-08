@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate, Outlet } from 'react-
 import Login from './pages/Login/Login';
 import PetManagement from './pages/PetManagement/PetManagement';
 import TutorRegistration from './pages/TutorRegistration/TutorRegistration';
+import TutorManagement from './pages/TutorManagement/TutorManagement';
 import { authService } from './services/authService';
 
 const ProtectedRoute = () => {
@@ -19,6 +20,9 @@ function App() {
         
         <Route element={<ProtectedRoute />}>
           <Route path="/pets" element={<PetManagement />} />
+          <Route path="/tutors" element={<TutorManagement />} />
+          <Route path="/tutors/new" element={<TutorRegistration />} />
+          <Route path="/tutors/edit/:id" element={<TutorRegistration />} />
         </Route>
         
         <Route path="*" element={<Navigate to="/login" replace />} />

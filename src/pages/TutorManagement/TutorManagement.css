@@ -1,0 +1,366 @@
+.tutor-management {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  animation: fadeIn 0.3s ease-in-out;
+  position: relative;
+  min-height: 100vh;
+}
+
+.tutor-header {
+  background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+  color: white;
+  padding: 1.5rem 2rem;
+  border-radius: 10px;
+  margin-bottom: 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.tutor-header h1 {
+  margin: 0;
+  font-size: 1.8rem;
+  font-weight: 700;
+}
+
+.add-tutor-btn {
+  background: linear-gradient(135deg, #f5be3a 0%, #f48e2b 100%);
+  color: #1e293b;
+  border: none;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  font-size: 1.4rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(244, 142, 43, 0.25);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.add-tutor-btn::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.2);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.add-tutor-btn:hover {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 6px 16px rgba(244, 142, 43, 0.3);
+}
+
+.add-tutor-btn:hover::after {
+  opacity: 1;
+}
+
+.add-tutor-btn:active {
+  transform: translateY(0) scale(0.98);
+  box-shadow: 0 2px 8px rgba(244, 142, 43, 0.2);
+}
+
+.add-tutor-btn:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(244, 142, 43, 0.4);
+}
+
+.no-tutors-message {
+  text-align: center;
+  margin: 4rem 0;
+  color: #4a5568;
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.empty-icon {
+  font-size: 4rem;
+  color: #cbd5e0;
+  margin-bottom: 1rem;
+}
+
+.primary-btn {
+  background: linear-gradient(135deg, #f5be3a 0%, #f48e2b 100%);
+  color: #1e293b;
+  border: none;
+  border-radius: 8px;
+  padding: 0.75rem 1.5rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  text-decoration: none;
+}
+
+.primary-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(244, 142, 43, 0.2);
+  color: #1e293b;
+}
+
+.primary-btn:active {
+  transform: translateY(0);
+}
+
+.primary-btn:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(244, 142, 43, 0.4);
+}
+
+.tutors-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+  padding: 1rem 0;
+}
+
+.tutor-card {
+  background: white;
+  border-radius: 12px;
+  padding: 1.75rem 1.5rem 1.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.03);
+  transition: all 0.3s ease;
+  border: 1px solid #e2e8f0;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.tutor-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 5px;
+  height: 100%;
+  background: linear-gradient(to bottom, #f5be3a, #f48e2b);
+}
+
+.tutor-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.03);
+  border-color: #e2e8f0;
+}
+
+.tutor-info h3 {
+  margin: 0 0 0.5rem 0;
+  color: #2d3748;
+  font-size: 1.25rem;
+}
+
+.tutor-nickname {
+  color: #4a5568;
+  font-style: italic;
+  margin: 0.25rem 0;
+}
+
+.tutor-detail, .tutor-pets {
+  margin: 0.5rem 0;
+  color: #4a5568;
+  font-size: 0.95rem;
+}
+
+.tutor-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e2e8f0;
+}
+
+.edit-btn, .delete-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.1rem;
+  width: 38px;
+  height: 38px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.edit-btn {
+  color: #3b82f6;
+  background-color: #eff6ff;
+}
+
+.edit-btn:hover {
+  background-color: #dbeafe;
+  color: #2563eb;
+}
+
+.delete-btn {
+  color: #ef4444;
+  background-color: #fef2f2;
+}
+
+.delete-btn:hover:not(:disabled) {
+  background-color: #fee2e2;
+  color: #dc2626;
+}
+
+.delete-btn:disabled, .edit-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.deleting-spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(239, 68, 68, 0.3);
+  border-radius: 50%;
+  border-top-color: #ef4444;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes modalFadeIn {
+  from { opacity: 0; transform: translateY(20px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.loading {
+  text-align: center;
+  padding: 2rem;
+  color: #4a5568;
+  font-size: 1.1rem;
+}
+
+/* Estilos para o diálogo de confirmação */
+.confirmation-dialog {
+  text-align: center;
+  padding: 0 1rem;
+}
+
+.confirmation-dialog h2 {
+  color: #2d3748;
+  margin-bottom: 1.5rem;
+  font-size: 1.5rem;
+}
+
+.confirmation-dialog p {
+  color: #4a5568;
+  margin-bottom: 2rem;
+  line-height: 1.6;
+  font-size: 1rem;
+}
+
+.confirmation-dialog .form-actions {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 2rem;
+  flex-wrap: wrap;
+}
+
+.confirmation-dialog .cancel-btn {
+  background-color: #f8fafc;
+  color: #4a5568;
+  border: 1px solid #e2e8f0;
+  padding: 0.7rem 1.75rem;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.95rem;
+  min-width: 120px;
+}
+
+.confirmation-dialog .cancel-btn:hover {
+  background-color: #f1f5f9;
+  border-color: #cbd5e1;
+}
+
+.confirmation-dialog .delete-confirm-btn {
+  background: linear-gradient(135deg, #f87171 0%, #ef4444 100%);
+  color: white;
+  border: none;
+  padding: 0.7rem 1.75rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.95rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  min-width: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.confirmation-dialog .delete-confirm-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(239, 68, 68, 0.2);
+}
+
+.confirmation-dialog .delete-confirm-btn:active {
+  transform: translateY(0);
+}
+
+.confirmation-dialog .delete-confirm-btn:disabled {
+  background: #e2e8f0;
+  color: #94a3b8;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.confirmation-dialog .deleting-spinner {
+  display: inline-block;
+  width: 1rem;
+  height: 1rem;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: white;
+  animation: spin 1s ease-in-out infinite;
+  margin-right: 0.5rem;
+  vertical-align: middle;
+}
+
+/* Ajustes para telas menores */
+@media (max-width: 480px) {
+  .confirmation-dialog .form-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .confirmation-dialog .cancel-btn,
+  .confirmation-dialog .delete-confirm-btn {
+    width: 100%;
+  }
+}

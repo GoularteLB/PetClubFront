@@ -2,23 +2,26 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { petService, Pet } from '../../services/petService';
 import { authService } from '../../services/authService';
-import { FaPlus } from 'react-icons/fa';
+import { FaPlus, FaEdit, FaTrash, FaDog, FaCat, FaDove, FaMouse } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import './PetManagement.css';
 
 const PetManagement = () => {
   const navigate = useNavigate();
   const [currentUser, setCurrentUser] = useState<{id: number, name: string} | null>(null);
-  
+  const [pets, setPets] = useState<Pet[]>([]);
+  const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [currentPet, setCurrentPet] = useState<Omit<Pet, 'id'>>({
+  const [isEditing, setIsEditing] = useState(false);
+  const [currentPet, setCurrentPet] = useState<Partial<Pet>>({
     name: '',
-    species: '',
+    species: 'CACHORRO',
     breed: '',
     birthDate: null,
     color: '',
     weight: 0,
-    ownerId: 0
+    tutorId: 0
   });
 
   useEffect(() => {
@@ -31,9 +34,24 @@ const PetManagement = () => {
     setCurrentUser(user);
     setCurrentPet(prev => ({
       ...prev,
-      ownerId: user.id
+      tutorId: user.id
     }));
+    
+    loadPets();
   }, [navigate]);
+  
+  const loadPets = async () => {
+    try {
+      setLoading(true);
+      const petsData = await petService.getPets();
+      setPets(petsData);
+    } catch (error) {
+      console.error('Erro ao carregar pets:', error);
+      toast.error('Erro ao carregar a lista de pets');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -44,8 +62,8 @@ const PetManagement = () => {
       parsedValue = parseFloat(value) || 0;
     } else if (name === 'birthDate' && value) {
       parsedValue = value;
-    } else if (name === 'ownerId') {
-      parsedValue = parseInt(value, 10) || 1;
+    } else if (name === 'tutorId') {
+      parsedValue = parseInt(value, 10) || 0;
     }
     
     setCurrentPet(prev => ({
@@ -53,66 +71,110 @@ const PetManagement = () => {
       [name]: parsedValue
     }));
   };
+  
+  const getSpeciesIcon = (species: string) => {
+    switch(species) {
+      case 'CACHORRO':
+        return <FaDog className="species-icon" />;
+      case 'GATO':
+        return <FaCat className="species-icon" />;
+      case 'PASSARO':
+        return <FaDove className="species-icon" />;
+      case 'ROEDOR':
+        return <FaMouse className="species-icon" />;
+      default:
+        return <FaDog className="species-icon" />;
+    }
+  };
+  
+  const formatDate = (dateString: string | null) => {
+    if (!dateString) return 'Não informada';
+    return new Date(dateString).toLocaleDateString('pt-BR');
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!currentUser) {
-      alert('Usuário não autenticado. Por favor, faça login novamente.');
+      toast.error('Usuário não autenticado. Por favor, faça login novamente.');
       navigate('/login');
       return;
     }
     
     if (!currentPet.name || !currentPet.species || !currentPet.breed || 
         currentPet.weight === undefined) {
-      alert('Por favor, preencha todos os campos obrigatórios');
+      toast.error('Por favor, preencha todos os campos obrigatórios');
       return;
     }
     
     try {
-      console.log('Enviando dados do pet:', currentPet);
+      if (isEditing && currentPet.id) {
+        await petService.updatePet(currentPet.id, currentPet);
+        toast.success('Pet atualizado com sucesso!');
+      } else {
+        await petService.createPet({
+          ...currentPet,
+          tutorId: currentUser.id
+        } as Omit<Pet, 'id'>);
+        toast.success('Pet cadastrado com sucesso!');
+      }
       
-      await petService.createPet({
-        ...currentPet,
-        ownerId: currentUser.id
-      });
-      
-      setCurrentPet({ 
-        name: '',
-        species: '',
-        breed: '',
-        birthDate: null,
-        color: '',
-        weight: 0,
-        ownerId: currentUser.id
-      });
-      
+      resetForm();
       setIsModalOpen(false);
-      alert('Pet cadastrado com sucesso!');
+      await loadPets();
     } catch (error) {
       console.error('Erro ao salvar pet:', error);
       
       if (axios.isAxiosError(error)) {
         const errorMessage = error.response?.data?.message || 'Erro desconhecido';
-        alert(`Erro ao salvar pet: ${errorMessage}`);
+        toast.error(`Erro ao salvar pet: ${errorMessage}`);
       } else if (error instanceof Error) {
-        alert(`Erro: ${error.message}`);
+        toast.error(`Erro: ${error.message}`);
       } else {
-        alert('Ocorreu um erro inesperado. Por favor, tente novamente.');
+        toast.error('Ocorreu um erro inesperado. Por favor, tente novamente.');
       }
     }
   };
-
-  const openNewPetModal = () => {
-    setCurrentPet({ 
+  
+  const handleEditPet = (pet: Pet) => {
+    setCurrentPet({
+      ...pet,
+      birthDate: pet.birthDate ? pet.birthDate.split('T')[0] : null
+    });
+    setIsEditing(true);
+    setIsModalOpen(true);
+  };
+  
+  const handleDeletePet = async (petId: number) => {
+    if (!window.confirm('Tem certeza que deseja excluir este pet?')) {
+      return;
+    }
+    
+    try {
+      await petService.deletePet(petId);
+      toast.success('Pet excluído com sucesso!');
+      await loadPets();
+    } catch (error) {
+      console.error('Erro ao excluir pet:', error);
+      toast.error('Erro ao excluir o pet. Tente novamente.');
+    }
+  };
+  
+  const resetForm = () => {
+    setCurrentPet({
       name: '',
-      species: '',
+      species: 'CACHORRO',
       breed: '',
       birthDate: null,
       color: '',
       weight: 0,
-      ownerId: 1
+      tutorId: currentUser?.id || 0
     });
+    setIsEditing(false);
+  };
+
+  const openNewPetModal = () => {
+    resetForm();
     setIsModalOpen(true);
   };
 
@@ -120,19 +182,70 @@ const PetManagement = () => {
     <div className="pet-management">
       <header className="pet-header">
         <h1>Meus Pets</h1>
-        <button className="add-pet-btn" onClick={openNewPetModal}>
-          <FaPlus />
-        </button>
+        <div className="header-actions">
+          <button 
+            className="primary-btn" 
+            onClick={() => navigate('/tutors')}
+          >
+            Gerenciar Tutores
+          </button>
+          <button className="add-pet-btn" onClick={openNewPetModal} title="Adicionar Pet">
+            <FaPlus />
+          </button>
+        </div>
       </header>
 
-      <div className="no-pets-message">
-        <p>Nenhum pet cadastrado ainda. Clique no botão "+" para adicionar um novo pet.</p>
-      </div>
+      {loading ? (
+        <div className="loading-message">
+          <p>Carregando pets...</p>
+        </div>
+      ) : pets.length === 0 ? (
+        <div className="no-pets-message">
+          <p>Nenhum pet cadastrado ainda. Clique no botão "+" para adicionar um novo pet.</p>
+        </div>
+      ) : (
+        <div className="pets-grid">
+          {pets.map((pet) => (
+            <div key={pet.id} className="pet-card">
+              <div className="pet-card-header">
+                {getSpeciesIcon(pet.species)}
+                <h3>{pet.name}</h3>
+              </div>
+              <div className="pet-details">
+                <p><strong>Espécie:</strong> {pet.species}</p>
+                <p><strong>Raça:</strong> {pet.breed}</p>
+                {pet.color && <p><strong>Cor:</strong> {pet.color}</p>}
+                {pet.weight > 0 && <p><strong>Peso:</strong> {pet.weight} kg</p>}
+                <p><strong>Data de Nascimento:</strong> {formatDate(pet.birthDate)}</p>
+              </div>
+              <div className="pet-actions">
+                <button 
+                  className="edit-btn"
+                  onClick={() => handleEditPet(pet)}
+                  title="Editar pet"
+                >
+                  <FaEdit />
+                </button>
+                <button 
+                  className="delete-btn"
+                  onClick={() => pet.id && handleDeletePet(pet.id)}
+                  title="Excluir pet"
+                >
+                  <FaTrash />
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
 
       {isModalOpen && (
-        <div className="modal-overlay">
-          <div className="modal">
-            <h2>Adicionar Novo Pet</h2>
+        <div className="modal-overlay" onClick={() => {
+          setIsModalOpen(false);
+          resetForm();
+        }}>
+          <div className="modal" onClick={e => e.stopPropagation()}>
+            <h2>{isEditing ? 'Editar Pet' : 'Adicionar Novo Pet'}</h2>
             <form onSubmit={handleSubmit}>
               <div className="form-group">
                 <label htmlFor="name">Nome do Pet</label>
