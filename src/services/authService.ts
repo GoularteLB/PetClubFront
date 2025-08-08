@@ -1,11 +1,17 @@
 import axios from 'axios';
 import { LoginRequest, AuthResponse } from '../types/auth';
 
-const API_URL = 'http://localhost:8080';
+const api = axios.create({
+  baseURL: '/',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+  withCredentials: true 
+});
 
 export const authService = {
   async login(loginData: LoginRequest): Promise<AuthResponse> {
-    const response = await axios.post<AuthResponse>(`${API_URL}/login`, loginData);
+    const response = await api.post<AuthResponse>('login', loginData);
     return response.data;
   },
 

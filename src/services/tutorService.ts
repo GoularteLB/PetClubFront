@@ -4,10 +4,11 @@ import type { Tutor } from '../types';
 export type { Tutor };
 
 const api = axios.create({
-  baseURL: 'http://localhost:8080/tutores',
+  baseURL: '/tutores', 
   headers: {
     'Content-Type': 'application/json',
   },
+  withCredentials: true 
 });
 
 api.interceptors.request.use(

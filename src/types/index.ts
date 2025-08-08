@@ -1,10 +1,14 @@
 
+// Tipos para espécies de pets (frontend e backend)
+export type PetSpeciesFrontend = 'CACHORRO' | 'GATO';
+export type PetSpeciesBackend = 'DOG' | 'CAT';
+
 export interface Tutor {
   id?: number;
   name: string;
   nickname?: string;
-  birthDate: string;
-    pets?: Pet[];
+  birthDate: string; // Formato 'YYYY-MM-DD'
+  pets?: Pet[];
   createdAt?: string;
   updatedAt?: string;
 }
@@ -12,12 +16,32 @@ export interface Tutor {
 export interface Pet {
   id?: number;
   name: string;
-  species: string;
+  /**
+   * Espécie do pet no formato do frontend ('CACHORRO' | 'GATO')
+   * No backend, será convertido para 'DOG' | 'CAT'
+   */
+  species: PetSpeciesFrontend;
   breed: string;
+  /**
+   * Data de nascimento no formato 'YYYY-MM-DD'
+   * Pode ser nulo se não informada
+   */
   birthDate: string | null;
   color: string;
   weight: number;
+  /**
+   * ID do tutor (usado no frontend)
+   * No backend, será mapeado para 'ownerId'
+   */
   tutorId: number;
+  /**
+   * ID do dono (usado no backend)
+   * No frontend, é mapeado de/para 'tutorId'
+   */
+  ownerId?: number;
+  /**
+   * Objeto do tutor relacionado (opcional, pode vir em consultas que incluem o relacionamento)
+   */
   tutor?: Tutor;
   createdAt?: string;
   updatedAt?: string;
@@ -26,16 +50,25 @@ export interface Pet {
 export interface Vacina {
   id?: number;
   type: string;
-  date: string;
+  date: string; // Formato 'YYYY-MM-DD'
   petId: number;
   pet?: Pet;
   createdAt?: string;
   updatedAt?: string;
 }
 
-export interface PetFormData extends Omit<Pet, 'id' | 'tutor' | 'createdAt' | 'updatedAt'> {}
-export interface TutorFormData extends Omit<Tutor, 'id' | 'createdAt' | 'updatedAt'> {}
-export interface VacinaFormData extends Omit<Vacina, 'id' | 'pet' | 'createdAt' | 'updatedAt'> {}
+// Tipos para formulários
+export interface PetFormData extends Omit<Pet, 'id' | 'tutor' | 'ownerId' | 'createdAt' | 'updatedAt'> {
+  // Campos adicionais específicos do formulário podem ser adicionados aqui
+}
+
+export interface TutorFormData extends Omit<Tutor, 'id' | 'pets' | 'createdAt' | 'updatedAt'> {
+  // Campos adicionais específicos do formulário podem ser adicionados aqui
+}
+
+export interface VacinaFormData extends Omit<Vacina, 'id' | 'pet' | 'createdAt' | 'updatedAt'> {
+  // Campos adicionais específicos do formulário podem ser adicionados aqui
+}
 
 
 export interface ApiResponse<T> {

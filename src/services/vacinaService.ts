@@ -1,10 +1,11 @@
 import axios, { AxiosError } from 'axios';
 
 const api = axios.create({
-  baseURL: 'http://localhost:8080/vacinas',
+  baseURL: '/vacinas', 
   headers: {
     'Content-Type': 'application/json',
   },
+  withCredentials: true 
 });
 
 api.interceptors.request.use(
