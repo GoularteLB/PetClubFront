@@ -184,7 +184,6 @@
   to { transform: rotate(360deg); }
 }
 
-/* Ajustes para telas menores */
 @media (max-width: 480px) {
   .modal {
     padding: 1.5rem;
