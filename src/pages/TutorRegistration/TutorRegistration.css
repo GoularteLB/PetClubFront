@@ -113,7 +113,6 @@
   margin-top: 0.25rem;
 }
 
-/* Responsividade */
 @media (max-width: 768px) {
   .tutor-registration {
     flex-direction: column;

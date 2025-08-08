@@ -322,7 +322,7 @@
   }
 }
 
-/* Estilos para a mensagem de nenhum pet */
+
 .loading-message {
   text-align: center;
   padding: 3rem 1rem;
@@ -366,7 +366,6 @@
   font-size: 1.1rem;
 }
 
-/* Estilos para o container dos botões */
 .action-buttons {
   display: flex;
   justify-content: center;
@@ -374,7 +373,6 @@
   margin-top: 1.5rem;
 }
 
-/* Estilos para o botão primário */
 .primary-btn {
   background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
   color: white;
